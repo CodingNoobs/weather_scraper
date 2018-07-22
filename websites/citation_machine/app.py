@@ -11,10 +11,12 @@ app = Flask(__name__)
 # to work.
 app.secret_key = 'Thisisasupersecretkey'
 
+# The index (home) route.
 @app.route("/")
 def index():
     return render_template('index.html')
 
+# The Book route.
 @app.route("/book", methods=('GET', 'POST'))
 def book():
     # Set the form for this route to the BookForm
@@ -44,7 +46,8 @@ def book():
         # Redirect to the same page to prevent a page
         # refresh resending the form.
         return redirect(url_for('result'))
-
+        
+    # If the form is not submitted, render this:
     return render_template("book.html", form=form)
 
 # A route to display the result of what was submitted from the BookForm.
