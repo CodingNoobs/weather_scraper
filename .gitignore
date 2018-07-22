@@ -1,0 +1,8 @@
+# Don't track virtual enviroments.
+*venv
+
+# Don't track Excel docs.
+*.xlsx
+
+# Dont' track .vscode settings
+*.vscode
