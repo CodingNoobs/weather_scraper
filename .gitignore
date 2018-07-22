@@ -4,12 +4,9 @@
 # Don't track Excel docs.
 *.xlsx
 
-<<<<<<< HEAD
 # Don't track .vscode settings.
 *.vscode
 
 # Don't track py error files.
 *__pycache__
 *.pyc
-=======
->>>>>>> 57e51e61f959498805d7fe3ae51ceade4eed56cc
