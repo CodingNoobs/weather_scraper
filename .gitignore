@@ -6,3 +6,7 @@
 
 # Dont' track .vscode settings
 *.vscode
+
+# Don't track python error files
+*__pycache__
+*.pyc
