@@ -18,7 +18,7 @@ $ cd weather_scraper
 
 ## Step 2
 
-Inside the folder **/weather_scraper** create a virtual enviroment. Make sure you are using Python 3.5 and above.
+Inside the folder **/weather_scraper** create a virtual enviroment. Make sure you are using Python 3.5 or above.
 ```
 $ python3 -m venv venv
 ```
