@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Cite a book!</h1>
+<p>Chicago footnote/endnote style!</p>
+
+<!-- The BookForm -->
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.first_name.label }}
+    {{ form.first_name(size=20) }}
+    <br>
+    {{ form.last_name.label }}
+    {{ form.last_name(size=20) }}
+    <br>
+    {{ form.book_title.label }}
+    {{ form.book_title(size=20) }}
+    <br>
+    {{ form.place_of_publication.label }}
+    {{ form.place_of_publication(size=20) }}
+    <br>
+    {{ form.publisher.label }}
+    {{ form.publisher(size=20) }}
+    <br>
+    {{ form.year_published.label }}
+    {{ form.year_published(size=20) }}
+    <br>
+    {{ form.page_number.label }}
+    {{ form.page_number(size=20) }}
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

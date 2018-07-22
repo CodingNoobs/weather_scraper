@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Your result!</h1>
+<p>
+Cite another:
+<a href="{{ url_for('book') }}">Book</a>
+</p>
+
+<!-- Where the BookForm citation output is created. -->
+<p>
+    {{ first_name }} 
+    {{ last_name }},
+    <span class="italicize">{{ book_title }}</span>
+    ({{ place_of_publication }}: 
+    {{ publisher }},
+    {{ year_published }}), 
+    {{ page_number }}.
+</p>
+
+{% endblock %}
