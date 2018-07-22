@@ -1,20 +1,26 @@
 #! python3
+
+# This program scrapes data from a weather website and saves into to an Excel doc.
+
+# Import external Python packages used by this program.
 import requests, datetime, pprint, os.path, time
 from bs4 import BeautifulSoup
 from openpyxl import Workbook, load_workbook
 from openpyxl.compat import range
 
-# Try to run program.
+# The URL of the website we want to scrape.
 url = 'https://forecast.weather.gov/MapClick.php?lat=39.59&lon=-105.01'
 
-# Infinite loop.
+# The name of the file to save the data to.
+dest_filename = 'denver_weather.xlsx'
+
+# Infinite loop. Runs the program until stopped. Use CTRL+C to stop.
 while True:
+
+    # Try to get the requested URL. 
     try:
-        # Request given URL.
+        # Request given URL. Timeout is how long a request will hang before giving up.
         r = requests.get(url, timeout=5)
-        
-        # Create BeautifulSoup object with the .text of our request object.
-        soup = BeautifulSoup(r.text, 'html.parser')
 
     # Handle exceptions.
     except requests.ConnectionError as e:
@@ -28,13 +34,17 @@ while True:
         print(str(e))
     except KeyboardInterrupt:
         print("Someone closed the program")
-    finally:
 
-        title_list = ['date', 'time', 'location', 'latitude', 'longitude', 'elevation', 'predicted_high_temp', 'current_temp']
+    # Do this if the program throws no exceptions.
+    else:
+
+        # Create BeautifulSoup object with the .text of our request object.
+        soup = BeautifulSoup(r.text, 'html.parser')
+
         # Create dictionary to hold weather data.
         weather = {}
 
-        # Set variables in dict.
+        # Set non-scraping variables in dict.
         weather['date'] = datetime.date.today()
         weather['time'] = datetime.datetime.now().time()
 
@@ -69,18 +79,15 @@ while True:
         except AttributeError:
             weather['current_temp'] = 'no data'
 
-        # Print out the key value pairs
-        for key, value in weather.items():
-            print('{}: {}'.format(key, value))
-
-        # The name of the file.
-        dest_filename = 'denver_weather.xlsx'
+        # Print out the key value pairs of the weather dict to terminal.
+        # for key, value in weather.items():
+        #     print('{}: {}'.format(key, value))
 
         # Check if the dest_file already exists.
         if not os.path.exists(dest_filename):
             print('File doesn\'t exist!')
 
-            # Create a new work.
+            # Create a new Excel workbook.
             wb = Workbook()
 
             # Create a new sheet.
@@ -88,13 +95,32 @@ while True:
 
             # Name the new sheet.
             ws1.title = "Denver_Weather"
+
+            # A list that holds the names of the columns for the Excel document.
+            title_list = ['date', 'time', 'location', 'latitude', 'longitude', 'elevation', 'predicted_high_temp', 'current_temp']
             
-            # Index 0 won't work in Excel
+            # Add the column name list to the sheet.
+            # Add to row 1.
             for row in range(1, 2):
+                # Add the columns to worksheet for the length of the title_list.
                 for col in range(len(title_list)):
                     # Add 1 to column index to avoid index 0 problem in Excel.
                     ws1.cell(column=col + 1, row=row, value="{}".format(title_list[col]))
 
+            # Create a dict with keys equal to the spreadsheet columns.
+            excel_dict = {'A': str(weather['date']),
+                          'B': weather['time'],
+                          'C': str(weather['location_name']),
+                          'D': str(weather['latitude']),
+                          'E': str(weather['longitude']),
+                          'F': str(weather['elevation']),
+                          'G': str(weather['predicted_high_temp']),
+                          'H': str(weather['current_temp'])}
+
+            # Append the next row to the Excel doc.
+            ws1.append(excel_dict)
+
+        # Otherwise, just add data to the file since it exists.
         else:
             print('File exists!')
 
@@ -102,20 +128,21 @@ while True:
             wb = load_workbook(filename = dest_filename)
             ws1 = wb.active
 
-            # Create a dict with keys eqaul to the spreadsheet columns.
+            # Just add values that change to next row.
             excel_dict = {'A': str(weather['date']),
-                        'B': weather['time'],
-                        'C': str(weather['location_name']),
-                        'D': str(weather['latitude']),
-                        'E': str(weather['longitude']),
-                        'F': str(weather['elevation']),
-                        'G': str(weather['predicted_high_temp']),
-                        'H': str(weather['current_temp'])}
+                          'B': weather['time'],
+                          'G': str(weather['predicted_high_temp']),
+                          'H': str(weather['current_temp'])}
             
+            # Append the next row to the Excel doc.
             ws1.append(excel_dict)
 
         # Save the file.
         wb.save(filename = dest_filename)
+        print('File saved!')
+
+        # Wait time. Don't scrape more than 1 request per second. Number is in seconds.
+        wait_time = 3600
 
         # Wait x amount of time before next iteration.
-        time.sleep(3600)
+        time.sleep(wait_time)
